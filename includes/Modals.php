@@ -13,11 +13,13 @@
 class NzBsModals
 {
 
+    private $img_popovers = false;
     private $modals;
 
     public function add_shortcodes()
     {
         add_shortcode('nz_bs_modals_trigger', array($this, 'add_modal_trigger'));
+        add_shortcode('nz_bs_popover_img_trigger', array($this, 'add_popover_trigger'));
         add_shortcode('nz_bs_modals_content', array($this, 'add_modal_content'));
         add_filter('the_content', array($this, 'fix_shortcodes'));
     }
@@ -73,6 +75,28 @@ class NzBsModals
         $inner = sprintf($inner_format, $iconclass, $title);
 
         return sprintf($trigger_format, $class, $id, $inner);
+        ?>
+        <!--
+                <a class="s">
+                    <i class="s"></i>
+                    !<s>title</s>
+                </a>
+        -->
+        <?php
+    }
+
+    public function add_popover_trigger($options, $content)
+    {
+        $opt = array_merge(array(
+            'id' => false,
+            'class' => '',
+            ), $options);
+
+        extract($opt);
+
+        $trigger_format = '<a class="%s" href="#%s" data-toggle="popover">%s</a>';
+        $this->img_popovers = true;
+        return sprintf($trigger_format, $class, $id, $content);
     }
 
     public function add_modal_content($options, $content)
@@ -110,6 +134,19 @@ class NzBsModals
                                     <div class="col-lg-8 col-lg-offset-2">
                                         <div class="modal-body"><?php echo $modal; ?></div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                }
+                if ($this->img_popovers) {
+                    ?>
+                    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="img-responsive" id="modalimagepreview" alt="modal-img" >
                                 </div>
                             </div>
                         </div>
