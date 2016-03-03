@@ -43,7 +43,6 @@ class NzBsModals
 
     public function add_modal_trigger($options, $content)
     {
-        /* d('trigger', $options); */
         $opt = array_merge(array(
             'id' => false,
             'class' => '',
@@ -78,7 +77,6 @@ class NzBsModals
 
     public function add_modal_content($options, $content)
     {
-        /*dd('content', $content);*/
 
         $opt = array_merge(array(
             'id' => false,
@@ -94,32 +92,32 @@ class NzBsModals
     {
         if (!empty($this->modals)) {
             ?>
-            <!--<div id="hidden-modals">-->
-            <?php
-            foreach ($this->modals as $k => $modal) {
-                /* d($modal); */
-                ?>
-                <div class="full-screen-modal modal fade" id="<?php echo $k ?>" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-content">
-                        <div class="close-modal" data-dismiss="modal">
-                            <div class="lr">
-                                <div class="rl">
+            <div id="hidden-modals">
+                <?php
+                foreach ($this->modals as $k => $modal) {
+                    /* d($modal); */
+                    ?>
+                    <div class="full-screen-modal modal fade" id="<?php echo $k ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-content">
+                            <div class="close-modal" data-dismiss="modal">
+                                <div class="lr">
+                                    <div class="rl">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-8 col-lg-offset-2">
-                                    <div class="modal-body"><?php echo $modal; ?></div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-8 col-lg-offset-2">
+                                        <div class="modal-body"><?php echo $modal; ?></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <?php
-            }
-            ?>
-            <!--</div>-->
+                    <?php
+                }
+                ?>
+            </div>
             <?php
         }
     }
