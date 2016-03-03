@@ -19,6 +19,18 @@ class NzBsModals
     {
         add_shortcode('nz_bs_modals_trigger', array($this, 'add_modal_trigger'));
         add_shortcode('nz_bs_modals_content', array($this, 'add_modal_content'));
+        add_filter('the_content', array($this, 'fix_shortcodes'));
+    }
+
+    public function fix_shortcodes($content)
+    {
+        $array = array(
+            '<p>[' => '[',
+            ']</p>' => ']',
+            ']<br />' => ']'
+        );
+        $content = strtr($content, $array);
+        return $content;
     }
 
     private function error($msg)
@@ -31,12 +43,13 @@ class NzBsModals
 
     public function add_modal_trigger($options, $content)
     {
-        d('trigger', $content);
+        /* d('trigger', $options); */
         $opt = array_merge(array(
             'id' => false,
             'class' => '',
             'iconclass' => '',
             'title' => false,
+            'title_tag' => false,
             ), $options);
 
         extract($opt);
@@ -50,6 +63,11 @@ class NzBsModals
         if (!$title) {
             return $this->error('title="blah" param missing from modal trigger');
         }
+
+        if ($title_tag) {
+            $title = sprintf('<%s>%s</%s>', $title_tag, $title, $title_tag);
+        }
+
         $trigger_format = '<a class="%s" href="#%s" data-toggle="modal">%s</a>';
         $inner_format = '<i class="%s"></i>%s';
 
@@ -60,7 +78,7 @@ class NzBsModals
 
     public function add_modal_content($options, $content)
     {
-        d('content', $content);
+        /*dd('content', $content);*/
 
         $opt = array_merge(array(
             'id' => false,
@@ -79,7 +97,7 @@ class NzBsModals
             <!--<div id="hidden-modals">-->
             <?php
             foreach ($this->modals as $k => $modal) {
-                d($modal);
+                /* d($modal); */
                 ?>
                 <div class="full-screen-modal modal fade" id="<?php echo $k ?>" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-content">
@@ -106,25 +124,3 @@ class NzBsModals
         }
     }
 }
-
-function shortcode_empty_paragraph_fix( $content ) {
-
-    // define your shortcodes to filter, '' filters all shortcodes
-    $shortcodes = array( 'your_shortcode_1', 'your_shortcode_2' );
-    
-    foreach ( $shortcodes as $shortcode ) {
-        
-        $array = array (
-            '<p>[' . $shortcode => '[' .$shortcode,
-            '<p>[/' . $shortcode => '[/' .$shortcode,
-            $shortcode . ']</p>' => $shortcode . ']',
-            $shortcode . ']<br />' => $shortcode . ']'
-        );
-
-        $content = strtr( $content, $array );
-    }
-
-    return $content;
-}
-
-add_filter( 'the_content', 'shortcode_empty_paragraph_fix' );
